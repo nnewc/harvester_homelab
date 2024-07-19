@@ -1,0 +1,26 @@
+scheme_version: 1
+token: i-am-token
+os:
+  ssh_authorized_keys:
+    - github:nnewc
+  hostname: harv_node
+  password: rancher
+install:
+  mode: create
+  device: /dev/sda
+  data_disk: /dev/sdb
+  skipchecks: true
+  addons:
+    harvester_vm_import_controller:
+      enabled: false
+      values_content: ""
+    harvester_pcidevices_controller:
+      enabled: false
+    rancher_monitoring:
+      enabled: true
+    rancher_logging:
+      enabled: true
+    harvester_seeder:
+      enabled: false
+system_settings:
+  auto-disk-provision-paths: ""
