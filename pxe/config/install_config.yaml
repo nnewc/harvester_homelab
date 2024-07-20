@@ -11,6 +11,7 @@ install:
   device: /dev/sda
   data_disk: /dev/sdb
   skipchecks: true
+  wipedisks: true
   addons:
     harvester_vm_import_controller:
       enabled: false
