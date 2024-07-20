@@ -3,6 +3,7 @@ token: i-am-token
 os:
   ssh_authorized_keys:
     - github:nnewc
+    - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFGa1ZQ0g52E6K5N3eq9S8pTgqDq7QfHbgdJ1UuXQFPasmT35lHyD+pBZd8aaN1AdI2b6dj/VY9nwDa6NlC0bIw=
   hostname: harv_node
   password: rancher
 install:
