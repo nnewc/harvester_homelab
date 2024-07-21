@@ -12,6 +12,9 @@ install:
   data_disk: /dev/sdb
   skipchecks: true
   wipedisks: true
+  vip: 10.0.1.144
+  vip_mode: static
+  iso_url: https://releases.rancher.com/harvester/master/harvester-master-amd64.iso
   addons:
     harvester_vm_import_controller:
       enabled: false
