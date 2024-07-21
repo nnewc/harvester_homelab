@@ -9,6 +9,7 @@ os:
   password: rancher
 install:
   mode: create
+  role: default
   debug: true
   device: /dev/sda
   data_disk: /dev/sdb
