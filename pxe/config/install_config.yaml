@@ -16,6 +16,7 @@ install:
   data_disk: /dev/sdb
   skipchecks: true
   wipedisks: true
+  tty: tty1
   vip: 10.0.1.144
   vip_mode: static
   iso_url: https://releases.rancher.com/harvester/v1.3.1/harvester-v1.3.1-amd64.iso
