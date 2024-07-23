@@ -7,6 +7,12 @@ os:
     - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFGa1ZQ0g52E6K5N3eq9S8pTgqDq7QfHbgdJ1UuXQFPasmT35lHyD+pBZd8aaN1AdI2b6dj/VY9nwDa6NlC0bIw=
   hostname: harvnode
   password: rancher
+  dns_nameservers:
+    - 10.0.1.3
+    - 8.8.8.8
+  ntp_servers:
+    - 0.suse.pool.ntp.org
+    - 1.suse.pool.ntp.org
 install:
   automatic: true
   mode: create
