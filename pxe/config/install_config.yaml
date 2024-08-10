@@ -27,7 +27,7 @@ install:
   tty: tty1
   management_interface:
     interfaces:
-    - name: eth0
+    - name: eno1
     method: static
     ip: 10.0.60.101
     subnetmask: 255.255.255.0
