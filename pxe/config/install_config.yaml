@@ -1,8 +1,6 @@
 scheme_version: 1
 token: i-am-token
 os:
-  after_install_chroot_commands:
-  - grub2-editenv /oem/grubenv set extra_cmdline=net.ifnames=0
   ssh_authorized_keys:
     - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoITw/rO25GOJqcjziveizqQGdAhWDkpjmv+2P2XEhtYoFgQ5YBtUNXHA24HD/SWWiY27FQl5i9IYtz+pwglxwYqJCl4SmUlOqZLLMhnr0YMSq05vLN0WcvKkKDO6TDpsXHsTkge+89dQMdkdzOXdxvtmijWj2lG8yfuW7Uuy7Bn21OY4M2ZFJDQHv+imS2BrhCPlVkJiQjgNIlDhu7iizIzqV3wiB2kcR0B7tYNEaL4FaJGxWN9H2efwteiCaHBhOu+GetTyqY4KL/G0AoyadnTxeBZgQVjQlSvbIYOgTN+cAp5zKP0UoYbZ7o/eId3X8z4cZYzw3OenaxP8y5fH5SIkwo1YBcq5CWMqYQrZtWPU60SpuGQVUw8GtjbUm45CXsbQUFOhfMy2vWTsxPLvkZu9uVevRvJt3ZPu1iacFK1kx3QlVQESjp3h4nyu4ypRvfNGafaBfdv516L3LStZCt40PvY2iEx38SzUKPik3sLSti71J9i04UAeFEjZt7HGqihjetQ3yiOY8QioTopYXhAlUDsEsDTWwecysWXVgmlWPbx0aNi1vS6NkQ/RE6PHzWldMV4s9VARs3YZAreAzMAWhO9DKx6WyrQh6kv5C8K1cPnnu/BkG8rsAcXtZ/KwX9pxyiupJRK+SK1iwKD+w1hdQtg1cjL9gRkAVuHNMLw==
     - github:nnewc
@@ -10,7 +8,7 @@ os:
   hostname: harvnode
   password: rancher
   dns_nameservers:
-    - 10.0.1.3
+    - 10.0.60.1
     - 8.8.8.8
   ntp_servers:
     - 0.suse.pool.ntp.org
@@ -19,6 +17,9 @@ install:
   automatic: true
   mode: create
   role: default
+  harvester:
+    storage_class:
+      replica_count: 1
   debug: true
   device: /dev/sda
   data_disk: /dev/sdb
