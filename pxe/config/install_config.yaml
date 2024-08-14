@@ -28,16 +28,10 @@ install:
   management_interface:
     interfaces:
     - name: eno1
-    method: static
-    ip: 192.168.60.101
-    subnetmask: 255.255.255.0
-    gateway: 192.168.60.1
-    defaultroute: true
+    method: dhcp
     bondoptions:
       miimon: "100"
       mode: active-backup
-    mtu: 0
-    vlanid: 0
   vip: 192.168.60.144
   vip_mode: static
   iso_url: https://releases.rancher.com/harvester/v1.3.1/harvester-v1.3.1-amd64.iso
