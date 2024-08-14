@@ -31,7 +31,7 @@ install:
     method: static
     ip: 192.168.60.101
     subnetmask: 255.255.255.0
-    gateway: 192.168.1.1
+    gateway: 192.168.60.1
     defaultroute: true
     bondoptions:
       miimon: "100"
