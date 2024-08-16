@@ -20,7 +20,7 @@ install:
     storage_class:
       replica_count: 1
   debug: true
-  device: /dev/sda
+  device: /dev/sdb
   data_disk: /dev/sdb
   skipchecks: true
   wipedisks: true
