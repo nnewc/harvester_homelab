@@ -12,6 +12,39 @@ os:
   ntp_servers:
     - 0.suse.pool.ntp.org
     - 1.suse.pool.ntp.org
+  write_files:
+  -  path: /var/lib/rancher/rke2/server/manifests/harbor.yaml
+     content: |
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        namespace: kube-system
+        name: harbor
+      spec:
+        targetNamespace: harbor
+        createNamespace: true
+        chart: harbor
+        repo: https://helm.goharbor.io
+        valuesContent: |-
+          persistence:
+            enabled: true
+          expose:
+            type: ingress
+            ingress:
+              annotations:
+                ingress.kubernetes.io/proxy-body-size: '0'
+                ingress.kubernetes.io/ssl-redirect: 'true'
+                nginx.ingress.kubernetes.io/proxy-body-size: '0'
+                nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+                cert-manager.io/issuer: selfsigned-issuer
+              hosts:
+                core: harbor.192.168.60.155.nip.io
+          tls:
+            certSource: secret
+            enabled: true
+            secret:
+              secretName: tls-ingress-harbor
+          externalURL: https://harbor.192.168.60.155.nip.io
 install:
   automatic: true
   mode: create
