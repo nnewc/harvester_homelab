@@ -1,0 +1,26 @@
+apiVersion: content.hauler.cattle.io/v1alpha1
+kind: Images
+metadata:
+  name: rancher-airgap-images-harvester
+  annotations:
+    # global flags for all images in the manifest
+    # image flags override global flags
+    hauler.dev/key: carbide-key.pub
+    # hauler.dev/platform: <platform>
+    # hauler.dev/registry: rgcrprod.azurecr.us
+spec:
+  images:
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-amd64.iso:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-amd64-net-install.iso:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-vmlinuz-amd64:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-initrd-amd64:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-rootfs-amd64.squashfs:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-amd64.sha512:v1.3.2-carbide-2
+    # - name: rgcrprod.azurecr.us/carbide/harvester/version.yaml:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-arm64.iso:v1.3.2-carbide-2
+    # - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-arm64-net-install.iso:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-vmlinuz-arm64:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-initrd-arm64:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-rootfs-arm64.squashfs:v1.3.2-carbide-2
+    - name: rgcrprod.azurecr.us/carbide/harvester/harvester-v1.3.2-carbide-2-arm64.sha512:v1.3.2-carbide-2
+    # - name: rgcrprod.azurecr.us/carbide/harvester/version-arm64.yaml:v1.3.2-carbide-2
