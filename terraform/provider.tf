@@ -9,4 +9,6 @@ terraform {
 
 provider "harvester" {
   # Configuration options
+  kubeconfig = var.kubeconfig
+  kubecontext = var.kubecontext
 }
