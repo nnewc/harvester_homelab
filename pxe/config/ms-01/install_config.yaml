@@ -56,7 +56,6 @@ install:
   device: /dev/nvme1n1
   data_disk: /dev/nvme0n1
   skipchecks: true
-  wipedisks: true
   tty: tty1
   management_interface:
     interfaces:
