@@ -12,9 +12,73 @@ os:
   ntp_servers:
     - 0.suse.pool.ntp.org
     - 1.suse.pool.ntp.org
+  after_install_chroot_commands:
+  - echo 'source <(kubectl completion bash)' >> /root/.bashrc
   write_files:
-  -  path: /var/lib/rancher/rke2/server/manifests/harbor.yaml
-     content: |
+  - path: /var/lib/rancher/rke2/server/manifests/excoredns.yaml
+    content: |
+      apiVersion: helm.cattle.io/v1
+      kind: HelmChart
+      metadata:
+        namespace: kube-system
+        name: excoredns
+      spec:
+        targetNamespace: kube-system
+        chart: k8s-gateway
+        repo: https://ori-edge.github.io/k8s_gateway
+        valuesContent: |-
+          domain: harvey.lan
+          watchedResources:
+          - Ingress
+          service:
+            loadBalancerIP: 192.168.60.3
+  - path: /var/lib/rancher/rke2/server/manifests/nvme.yaml
+    content: |
+      apiVersion: apps/v1
+      kind: DaemonSet
+      metadata:
+        name: nvme-exporter
+        namespace: cattle-monitoring-system
+      spec:
+        selector:
+          matchLabels:
+            app: nvme-exporter
+        template:
+          metadata:
+            labels:
+              app: nvme-exporter
+          spec:
+            tolerations:
+            - key: node-role.kubernetes.io/master
+              operator: Exists
+              effect: NoSchedule
+            containers:
+            - name: nvme-exporter
+              image: "fritchie/nvme_exporter"
+              command: ["nvme_exporter"]
+              # nvme-cli requires pod to be privileged
+              securityContext:
+                privileged: true
+              ports:
+              - containerPort: 9998
+                protocol: TCP
+      ---
+      apiVersion: monitoring.coreos.com/v1
+      kind: ServiceMonitor
+      metadata:
+        name: nvme-exporter
+        namespace: cattle-monitoring-system
+        labels:
+          app: nvme-exporter
+      spec:
+        selector:
+          matchLabels:
+            app: nvme-exporter
+        endpoints:
+        - port: metrics
+          path: /metrics
+  - path: /var/lib/rancher/rke2/server/manifests/harbor.yaml
+    content: |
       apiVersion: helm.cattle.io/v1
       kind: HelmChart
       metadata:
@@ -38,13 +102,17 @@ os:
                 nginx.ingress.kubernetes.io/ssl-redirect: 'true'
                 cert-manager.io/issuer: selfsigned-issuer
               hosts:
-                core: harbor.192.168.60.155.nip.io
+                core: harbor.harvey.lan
+          metrics:
+            enabled: true
+            serviceMonitor:
+              enabled: true
           tls:
             certSource: secret
             enabled: true
             secret:
               secretName: tls-ingress-harbor
-          externalURL: https://harbor.192.168.60.155.nip.io
+          externalURL: https://harbor.harvey.lan
 install:
   automatic: true
   mode: create
