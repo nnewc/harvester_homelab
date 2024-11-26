@@ -115,7 +115,7 @@ os:
             enabled: true
             secret:
               secretName: tls-ingress-harbor
-          externalURL: https://harbor.harvey.lan
+          externalURL: harbor.harvey.lan
 install:
   automatic: true
   mode: create
