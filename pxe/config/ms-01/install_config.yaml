@@ -92,6 +92,9 @@ os:
         valuesContent: |-
           persistence:
             enabled: true
+            persistentVolumeClaim:
+              registry:
+                size: 100Gi 
           expose:
             type: ingress
             ingress:
@@ -134,7 +137,6 @@ install:
       mode: active-backup
   vip: 192.168.60.155
   vip_mode: static
-  iso_url: http://192.168.1.6:8083/asset-mirror/releases/download/carbide/harvester/v1.3.2-govt.1/harvester-v1.3.2-govt.1-amd64.iso
   addons:
     harvester_vm_import_controller:
       enabled: false
