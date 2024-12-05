@@ -43,3 +43,8 @@ rancher_store/
 
 manifest.json
 config.json
+.terraform
+
+store/
+fileserver/
+registry/
