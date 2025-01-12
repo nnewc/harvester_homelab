@@ -11,7 +11,9 @@ resource "harvester_cloudinit_secret" "bootstrap" {
       owner: root
       content: |
         token: ${var.shared_token}
+        %{~ if var.system_default_registry != "" ~}
         system-default-registry:  ${var.system_default_registry}
+        %{~ endif ~}
         tls-san:
           - ${local.bootstrap_vm_name}
           - ${var.control_plane_vip}
@@ -21,6 +23,24 @@ resource "harvester_cloudinit_secret" "bootstrap" {
       content: |
         127.0.0.1 localhost
         127.0.0.1 ${local.bootstrap_vm_name}
+    %{~ if var.system_default_registry !="" ~}
+    - path: /etc/rancher/rke2/registries.yaml
+      owner: root
+      content: |
+        mirrors:
+          "*":
+            endpoint:
+              %{~ if var.registry_endpoint !="" ~}
+              - ${var.registry_endpoint}
+              %{~ else ~}
+              - "https://${var.system_default_registry}"
+              %{~ endif ~}
+        configs:
+          "${var.system_default_registry}":
+            auth:
+              username: ${var.registry_user}
+              password: ${var.registry_password}
+    %{~ endif ~}
     - path: /var/lib/rancher/rke2/server/manifests/rancher.yaml
       owner: root
       content: |
@@ -34,9 +54,18 @@ resource "harvester_cloudinit_secret" "bootstrap" {
           createNamespace: true
           version: ${var.rancher_version}
           chart: rancher
+          %{~ if var.rancher_chart_url !="" ~}
+          repo: ${var.rancher_chart_url}
+          %{~ else ~}
           repo: https://releases.rancher.com/server-charts/${var.rancher_channel}
+          %{~ endif ~}
           valuesContent: |-
             hostname: rancher.${var.control_plane_vip}.nip.io
+            bootstrapPassword: ${var.rancher_bootstrap_password}
+            %{~ if var.system_default_registry != "" ~}
+            useBundledSystemChart: true
+            system-default-registry:  ${var.system_default_registry}
+            %{~ endif ~}
     - path: /var/lib/rancher/rke2/server/manifests/cert-manager.yaml
       owner: root
       content: |
@@ -49,7 +78,7 @@ resource "harvester_cloudinit_secret" "bootstrap" {
           targetNamespace: cert-manager
           createNamespace: true
           bootstrap: true
-          version: v1.13.1
+          version: ${var.cert_manager_version}
           chart: cert-manager
           repo: https://charts.jetstack.io
           valuesContent: |-
@@ -80,17 +109,19 @@ resource "harvester_cloudinit_secret" "bootstrap" {
       - enable
       - '--now'
       - qemu-guest-agent.service
-    %{ if var.airgapped_image != true }
+    %{~ if var.airgapped_image != true ~}
     - mkdir -p /var/lib/rancher/rke2-artifacts && wget https://get.rke2.io -O /var/lib/rancher/install.sh && chmod +x /var/lib/rancher/install.sh
-    %{ endif }
+    %{~ endif ~}
     - INSTALL_RKE2_CHANNEL=${ var.rke2_channel } /var/lib/rancher/install.sh
     - systemctl enable rke2-server.service
     - useradd -r -c "etcd user" -s /sbin/nologin -M etcd -U
     - systemctl start rke2-server.service
     - echo 'source /etc/bash_completion' >> /root.bashrc
     - echo 'export KUBECONFIG=/etc/rancher/rke2/rke2.yaml' >> /root/.bashrc
+    - echo 'export CRI_CONFIG_FILE=/var/lib/rancher/rke2/agent/etc/crictl.yaml' >> /root/.bashrc
     - echo 'export PATH=$PATH:/var/lib/rancher/rke2/bin/' >> /root/.bashrc
     - echo 'source <(kubectl completion bash)' >> /root/.bashrc
+    - echo 'source <(crictl completion bash)' >> /root/.bashrc
     ssh_authorized_keys: 
     - ${ var.ssh_pub_key }
     timezone: US/Central
@@ -102,7 +133,7 @@ resource "harvester_cloudinit_secret" "bootstrap" {
       shell: /bin/bash
       sudo: ALL=(ALL) NOPASSWD:ALL
       ssh_authorized_keys:
-        - ${ var.ssh_pub_key }
+      - ${ var.ssh_pub_key }
   EOF
 
   network_data = <<EOM
@@ -135,6 +166,24 @@ resource "harvester_cloudinit_secret" "master" {
           - ${format("${var.cluster_name}-master-%03d",count.index + 1)}
           - ${var.control_plane_vip}
         secrets-encryption: true
+    %{~ if var.system_default_registry !="" ~}
+    - path: /etc/rancher/rke2/registries.yaml
+      owner: root
+      content: |
+        mirrors:
+          "*":
+            endpoint:
+              %{~ if var.registry_endpoint !="" ~}
+              - ${var.registry_endpoint}
+              %{~ else ~}
+              - "https://${var.system_default_registry}"
+              %{~ endif ~}
+        configs:
+          "${var.system_default_registry}":
+            auth:
+              username: ${var.registry_user}
+              password: ${var.registry_password}
+    %{~ endif ~}
     - path: /etc/hosts
       owner: root
       content: |
@@ -196,6 +245,24 @@ resource "harvester_cloudinit_secret" "worker" {
         token: ${var.shared_token}
         server: https://${var.control_plane_vip}:9345
         system-default-registry:  ${var.system_default_registry}
+    %{~ if var.system_default_registry !="" ~}
+    - path: /etc/rancher/rke2/registries.yaml
+      owner: root
+      content: |
+        mirrors:
+          "*":
+            endpoint:
+              %{~ if var.registry_endpoint !="" ~}
+              - ${var.registry_endpoint}
+              %{~ else ~}
+              - "https://${var.system_default_registry}"
+              %{~ endif ~}
+        configs:
+          "${var.system_default_registry}":
+            auth:
+              username: ${var.registry_user}
+              password: ${var.registry_password}
+    %{~ endif ~}
     - path: /etc/hosts
       owner: root
       content: |
@@ -206,9 +273,9 @@ resource "harvester_cloudinit_secret" "worker" {
       - enable
       - '--now'
       - qemu-guest-agent.service
-    %{ if var.airgapped_image != true }
+    %{~ if var.airgapped_image != true ~}
     - mkdir -p /var/lib/rancher/rke2-artifacts && wget https://get.rke2.io -O /var/lib/rancher/install.sh && chmod +x /var/lib/rancher/install.sh
-    %{ endif }
+    %{~ endif ~}
     - INSTALL_RKE2_CHANNEL=${ var.rke2_channel } INSTALL_RKE2_TYPE=agent /var/lib/rancher/install.sh
     - systemctl enable rke2-agent.service
     - systemctl start rke2-agent.service
@@ -223,7 +290,7 @@ resource "harvester_cloudinit_secret" "worker" {
       shell: /bin/bash
       sudo: ALL=(ALL) NOPASSWD:ALL
       ssh_authorized_keys:
-        - ${ var.ssh_pub_key }
+      - ${ var.ssh_pub_key }
   EOF
 
   network_data = <<EOM

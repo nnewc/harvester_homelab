@@ -47,7 +47,7 @@ variable "rancher_server" {
 
 variable "rancher_version" {
   type = string
-  default = "2.8.2"
+  default = ""
 }
 
 variable "cert_manager_version" {
@@ -56,6 +56,11 @@ variable "cert_manager_version" {
 }
 
 variable "rancher_bootstrap_password" {
+  type = string
+  default = ""
+}
+
+variable "cert_manager_version" {
   type = string
   default = ""
 }

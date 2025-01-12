@@ -60,7 +60,7 @@ resource "harvester_virtualmachine" "bootstrap-node" {
   }
 
   cloudinit  {
-    user_data_secret_name = local.bootstrap_vm_name
+    user_data_secret_name = harvester_cloudinit_secret.bootstrap.name
   }
 }
 
@@ -125,7 +125,7 @@ resource "harvester_virtualmachine" "master-nodes" {
     }
 
     cloudinit  {
-        user_data_secret_name = "${format("${var.cluster_name}-master-%03d",count.index + 1)}"
+        user_data_secret_name = harvester_cloudinit_secret.master[count.index].name
     }
 
 }
@@ -191,6 +191,6 @@ resource "harvester_virtualmachine" "worker-nodes" {
     }
 
     cloudinit  {
-        user_data_secret_name = "${format("${var.cluster_name}-worker-%03d",count.index)}"
+        user_data_secret_name = harvester_cloudinit_secret.worker[count.index].name
     }
 }

@@ -127,3 +127,33 @@ variable "vm_network_namespace" {
   type = string
   default = "default"
 }
+
+variable "rancher_bootstrap_password" {
+  type = string
+  default = ""
+}
+
+variable "registry_user" {
+  type = string
+  default = ""
+}
+
+variable "registry_password" {
+  type = string
+  default = ""
+}
+
+variable "cert_manager_version" {
+  type = string
+  default = ""
+}
+
+variable "rancher_chart_url" {
+  type = string
+  default = ""
+}
+
+variable "registry_endpoint" {
+  type = string
+  default = ""
+}
