@@ -1,0 +1,51 @@
+scheme_version: 1
+token: i-am-token
+os:
+  ssh_authorized_keys:
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDoITw/rO25GOJqcjziveizqQGdAhWDkpjmv+2P2XEhtYoFgQ5YBtUNXHA24HD/SWWiY27FQl5i9IYtz+pwglxwYqJCl4SmUlOqZLLMhnr0YMSq05vLN0WcvKkKDO6TDpsXHsTkge+89dQMdkdzOXdxvtmijWj2lG8yfuW7Uuy7Bn21OY4M2ZFJDQHv+imS2BrhCPlVkJiQjgNIlDhu7iizIzqV3wiB2kcR0B7tYNEaL4FaJGxWN9H2efwteiCaHBhOu+GetTyqY4KL/G0AoyadnTxeBZgQVjQlSvbIYOgTN+cAp5zKP0UoYbZ7o/eId3X8z4cZYzw3OenaxP8y5fH5SIkwo1YBcq5CWMqYQrZtWPU60SpuGQVUw8GtjbUm45CXsbQUFOhfMy2vWTsxPLvkZu9uVevRvJt3ZPu1iacFK1kx3QlVQESjp3h4nyu4ypRvfNGafaBfdv516L3LStZCt40PvY2iEx38SzUKPik3sLSti71J9i04UAeFEjZt7HGqihjetQ3yiOY8QioTopYXhAlUDsEsDTWwecysWXVgmlWPbx0aNi1vS6NkQ/RE6PHzWldMV4s9VARs3YZAreAzMAWhO9DKx6WyrQh6kv5C8K1cPnnu/BkG8rsAcXtZ/KwX9pxyiupJRK+SK1iwKD+w1hdQtg1cjL9gRkAVuHNMLw==
+    - github:nnewc
+    - ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFGa1ZQ0g52E6K5N3eq9S8pTgqDq7QfHbgdJ1UuXQFPasmT35lHyD+pBZd8aaN1AdI2b6dj/VY9nwDa6NlC0bIw=
+  hostname: harvey02
+  password: rancher
+  dns_nameservers:
+    - 192.168.60.1
+  ntp_servers:
+    - 0.suse.pool.ntp.org
+    - 1.suse.pool.ntp.org
+  after_install_chroot_commands:
+  - echo 'source <(kubectl completion bash)' >> /root/.bashrc
+install:
+  automatic: true
+  mode: join
+  role: default
+  harvester:
+    storage_class:
+      replica_count: 1
+  debug: true
+  device: /dev/nvme1n1
+  data_disk: /dev/nvme0n1
+  skipchecks: true
+  tty: tty1
+  management_interface:
+    interfaces:
+    - name: enp89s0
+    method: dhcp
+    bondoptions:
+      miimon: "100"
+      mode: active-backup
+  vip: 192.168.60.155
+  vip_mode: static
+  addons:
+    harvester_vm_import_controller:
+      enabled: false
+      values_content: ""
+    harvester_pcidevices_controller:
+      enabled: false
+    rancher_monitoring:
+      enabled: true
+    rancher_logging:
+      enabled: true
+    harvester_seeder:
+      enabled: false
+system_settings:
+  auto-disk-provision-paths: ""
