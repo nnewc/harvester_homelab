@@ -28,7 +28,7 @@ install:
   tty: tty1
   management_interface:
     interfaces:
-    - name: enp89s0
+    - name: enp90s0
     method: dhcp
     bondoptions:
       miimon: "100"
