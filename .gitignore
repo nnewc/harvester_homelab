@@ -48,3 +48,7 @@ config.json
 store/
 fileserver/
 registry/
+
+certs/*.pem
+certs/*.csr
+certs/*.srl
